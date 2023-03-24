@@ -1,0 +1,9 @@
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+
+    Alexanevsky\InputManagerBundle\:
+        resource: '../src/*'
+        exclude:
+            - '../src/DependencyInjection'
