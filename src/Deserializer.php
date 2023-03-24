@@ -210,7 +210,7 @@ class Deserializer
             }
 
             if ($keySuffix) {
-                $suffixedKey = $keySuffix . '_' . $keySuffix;
+                $suffixedKey = $setter->getName() . '_' . $keySuffix;
                 $possibleKeys = array_merge($possibleKeys, [
                     u($suffixedKey)->camel()->toString(),
                     u($suffixedKey)->snake()->toString(),
