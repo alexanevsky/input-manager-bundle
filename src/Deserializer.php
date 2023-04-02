@@ -12,6 +12,7 @@ use Alexanevsky\InputManagerBundle\Input\InputModifiableInterface;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\Mapping\MappingException;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\SerializerInterface;
 use function Symfony\Component\String\u;
 
@@ -144,9 +145,11 @@ class Deserializer
                     } elseif (is_array($value) && method_exists($class, 'fromArray')) {
                         $setter->setValue($class::fromArray($value));
                     } elseif (is_array($value)) {
-                        $setter->setValue($this->serializer->deserialize(json_encode($value, JSON_UNESCAPED_UNICODE), $class, 'json'));
+                        $setter->setValue($this->serializer->deserialize(json_encode($value, JSON_UNESCAPED_UNICODE), $class, JsonEncoder::FORMAT));
                     } elseif (is_string($value) && method_exists($class, 'fromString')) {
                         $setter->setValue($class::fromString($value));
+                    } elseif (is_string($value) && method_exists($class, 'fromJson') && !is_null(json_decode($value))) {
+                        $setter->setValue($class::fromJson($value));
                     } else {
                         try {
                             // Just to catch MappingException if given class is not entity
